@@ -1,5 +1,7 @@
 package org.lib;
 
+import java.util.Scanner;
+
 public class MyQueue<T> {
     private T[] elements;
 

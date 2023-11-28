@@ -1,63 +1,97 @@
 package org;
 
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.Stack;
 import java.util.Scanner;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.function.Supplier;
 
-class MessageSystem {
-    private Queue<String> messageQueue;
-    private Stack<String> messageStack;
+import org.lib.MyQueue;
+import org.lib.MyStack;
 
-    public MessageSystem() {
-        this.messageQueue = new LinkedList<>();
-        this.messageStack = new Stack<>();
+class HandleMessage {
+    private MyQueue<String> queue = new MyQueue<>();
+    private MyStack<String> stack = new MyStack<>();
+
+    public HandleMessage() {
+    }
+
+    // handle input
+    public void processInput(String message, String note, int count) {
+        if (!message.trim().isEmpty()) {
+            if (message.equalsIgnoreCase("exit")) {
+                System.out.println("Exiting...");
+                new Timer().schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        System.exit(0);
+                    }
+                }, 4000);
+            } else {
+                Supplier<Boolean> isValidMessage = () -> message.length() >= 2 && message.matches("^[a-zA-Z0-9]+$");
+
+                if (isValidMessage.get()) {
+                    count++;
+                    handleMessage(message, count);
+                } else {
+                    System.out.println(note);
+                }
+            }
+        } else {
+            System.out.println(note);
+        }
+
+    }
+
+    public void handleMessage(String message, int count) {
+        queue.offer(message);
+        System.out.println("Message added to queue. Current queue size: " + queue.size());
+        if (count >= 5 || queue.size() >= 5) {
+            System.out.println("Maximum count reached. Exiting...");
+            System.exit(0);
+        }
+    }
+
+    public void Message(String message, int count) {
+        if (count <= 4) {
+            String note = "Please enter a message with at least 2 characters and do not start with special characters :)";
+            processInput(message, note, count);
+        } else {
+            System.exit(0);
+        }
     }
 
     public boolean isValidMessage(String message) {
-        // Thêm điều kiện để xác định xem một tin nhắn có hợp lệ hay không
-        // Ví dụ: Tin nhắn phải có ít nhất 5 ký tự và không được chứa ký tự đặc biệt
-        return message.length() >= 5 && message.matches("^[a-zA-Z0-9 ]+$");
+        return message.length() >= 2 && message.matches("^[a-zA-Z0-9]+$");
     }
+}
 
-    public void sendMessage(String message) {
-        if (isValidMessage(message)) {
-            System.out.println("Sending message: " + message);
-            messageQueue.offer(message);
-        } else {
-            System.out.println("Invalid message. Please enter a valid message.");
-        }
-    }
-
-    public void processMessages() {
-        while (!messageQueue.isEmpty()) {
-            String message = messageQueue.poll();
-            messageStack.push(message);
-        }
-
-        while (!messageStack.isEmpty()) {
-            String processedMessage = messageStack.pop();
-            System.out.println("Processed message: " + processedMessage);
-        }
-    }
+public class Test {
+    public static Scanner scanner = new Scanner(System.in);
+    private static int count = 1;
 
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        MessageSystem messageSystem = new MessageSystem();
+        System.out.println("Welcome to Message System!");
 
-        System.out.println("Enter a message (type 'exit' to end):");
+        HandleMessage handleMessage = new HandleMessage();
 
         while (true) {
-            String input = scanner.nextLine();
+            System.out.print("Enter the " + count + getSuffix(count) + " message (type 'exit' to end): ");
+            String message = scanner.nextLine();
 
-            if (input.equalsIgnoreCase("exit")) {
-                break;
-            }
-
-            messageSystem.sendMessage(input);
+            handleMessage.Message(message, count);
         }
+    }
 
-        System.out.println("\nProcessing messages:");
-        messageSystem.processMessages();
+    public static String getSuffix(int i) {
+        switch (i) {
+            case 1:
+                return "st";
+            case 2:
+                return "nd";
+            case 3:
+                return "rd";
+            default:
+                return "th";
+        }
     }
 }

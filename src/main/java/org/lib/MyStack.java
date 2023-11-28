@@ -60,25 +60,7 @@ public class MyStack<T> {
         this.elements = (T[]) new Object[0];
     }
 
-    // test
-    public static void main(String[] args) {
-        MyStack<Integer> stack = new MyStack<>();
-
-        stack.push(1);
-        stack.push(2);
-        stack.push(3);
-
-        System.out.println(Arrays.toString(stack.elements));
-
-        System.out.println("Pop: " + stack.pop());
-        System.out.println("Peek: " + stack.peek());
-        System.out.println("Size: " + stack.size());
-        System.out.println("Is empty: " + stack.isEmpty());
-
-        stack.clear();
-
-        System.out.println("Is empty: " + stack.isEmpty());
-
-        System.out.println("---------------------");
+    public T[] getElements() {
+        return elements;
     }
 }

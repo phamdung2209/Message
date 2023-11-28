@@ -5,14 +5,21 @@ import org.handler.HandleMessage;
 
 public class Run {
     public static Scanner scanner = new Scanner(System.in);
+    private static int count = 1;
+    private static HandleMessage handleMessage = new HandleMessage();
 
     public static void main(String[] args) {
-        while (true) {
-            System.out.print("Enter a message (type 'exit' to end): ");
-            String message = scanner.nextLine();
+        System.out.print("Enter the message number: ");
+        while (!scanner.hasNextInt()) {
+            System.out.print("Enter the message number: ");
+            scanner.next();
+        }
+        int countMessage = scanner.nextInt();
 
-            HandleMessage handleMessage = new HandleMessage();
-            handleMessage.Message(message);
+        while (true) {
+            handleMessage.Message(count, countMessage);
         }
     }
+
+    
 }
